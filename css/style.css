@@ -5,8 +5,33 @@
 	margin-right: 20px;
 }
 
-.mysvg.yaxis text {
-	font-size: 10px;
+text {
 	font-family: sans-serif;
+}
+
+text.yaxis {
 	text-anchor: middle;
+	font-size: 0.8em;
+}
+
+text.season-label  {
+	text-anchor: middle;
+	font-size: 0.8em;
+}
+
+text.xaxis {
+	font-size: 0.6em;
+}
+
+text.xaxis.min {
+	text-anchor: start;
+}
+
+text.xaxis.max {
+	text-anchor: end;
+}
+
+path.segment {
+	stroke: purple;
+	"stroke-width": 1;
 }
