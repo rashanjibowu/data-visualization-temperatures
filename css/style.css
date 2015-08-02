@@ -4,3 +4,9 @@
 	float: left;
 	margin-right: 20px;
 }
+
+.mysvg.yaxis text {
+	font-size: 10px;
+	font-family: sans-serif;
+	text-anchor: middle;
+}

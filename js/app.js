@@ -5,6 +5,7 @@ $(document).ready(function() {
 
 	// get some data
 	var data = getData();
+	var years = getYears(data);
 
 	// set dimension
 	var dimensions = {
@@ -27,6 +28,8 @@ $(document).ready(function() {
 
 	var middle = dimensions.outer.width / 2;
 
+	var barHeight = 10;
+
 	// set scales
 	var xScale = d3.scale.linear()
 		.domain(d3.extent(data, function(element) {
@@ -34,13 +37,42 @@ $(document).ready(function() {
 		}))
 		.range([dimensions.margins.left, dimensions.inner.width + dimensions.margins.left]);
 
-	var seasons = ["Winter", "Spring", "Summer", "Autumn"];
+	// draw legend
+	var svg = d3.select("#visualization")
+			.append("svg")
+			.attr({
+				width: dimensions.outer.width,
+				height: dimensions.outer.height,
+				class: function() {
+					return "mysvg yaxis";
+				}
+			});
 
+	// remove existing labels
+	svg.selectAll(".mysvg.yaxis text").remove();
+
+	svg.selectAll(".mysvg.yaxis text")
+		.data(years)
+		.enter()
+		.append("text")
+		.text(function(d, i) {
+			// show every five years
+			if (d % 5 === 0) return d;
+			return;
+		})
+		.attr({
+			x: middle,
+			y: function(d, i) {
+				return (i + 1) * barHeight;
+			}
+		});
+
+	// create the vertical lanes
+	var seasons = ["Winter", "Spring", "Summer", "Autumn"];
 	seasons.forEach(function(season, index, thisArray) {
 
 		season = season.toLowerCase();
 
-		// create the vertical lanes
 		var svg = d3.select("#visualization")
 			.append("svg")
 			.attr({
@@ -50,8 +82,6 @@ $(document).ready(function() {
 					return "mysvg " + season.toLowerCase();
 				}
 			});
-
-		var barHeight = 5;
 
 		var relevantData = data.filter(function(element, index, thisArray) {
 			return element.season.toLowerCase() == season;
@@ -63,7 +93,6 @@ $(document).ready(function() {
 			.append("rect")
 			.attr({
 				width: function(d, i) {
-
 					// absolute value of deviation
 					return xScale(Math.abs(d.deviation)) - middle;
 				},
@@ -109,4 +138,28 @@ function getData() {
 	});
 
 	return data;
+}
+
+function getYears(data) {
+	if (!data) {
+		console.error("No data exists!");
+		return;
+	}
+
+	if (data.length === 0) {
+		console.error("There is no data");
+		return;
+	}
+
+	var season = data[0].season;
+
+	var filtered = data.filter(function(element, index, thisArray) {
+		return element.season == season;
+	});
+
+	var years = filtered.map(function(element, index, thisArray) {
+		return element.year;
+	});
+
+	return years;
 }
