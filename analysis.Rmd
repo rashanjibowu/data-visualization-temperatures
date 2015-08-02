@@ -1,0 +1,156 @@
+---
+title: "Global Historical Temperatures"
+author: "Rashan Jibowu"
+date: "08/02/2015"
+output:
+  html_document:
+    keep_md: yes
+---
+
+## Introduction
+
+x
+
+## Set Up Environment
+
+```{r}
+
+library(plyr) 
+library(ggplot2)
+
+```
+
+## Load the data
+
+```{r load}
+
+# Data includes NA encodings as '***' and '****'
+data <- read.csv("./data/ExcelFormattedGISTEMPDataCSV.csv", na.strings = c('***','****'))
+
+```
+
+Let's checkout the structure of the data
+
+```{r structure}
+
+str(data)
+
+```
+
+## Clean the data
+
+Considering the struture of the data observed above, we'll need to do 2 things to make this data more usable:
+
+1. Fix the formatting issue where several months are encoded as factors rather than integers
+2. Clarify what `J.D`, `D.N`, `DJF`, `MAM`, `JJA`, and `SON` mean
+
+### Fix Formatting
+
+```{r clean}
+
+# fix formatting (only useful when you don't include the na.strings argument when reading in the data)
+data$Jul <- as.integer(data$Jul)
+data$Aug <- as.integer(data$Aug)
+data$Sep <- as.integer(data$Sep)
+data$Oct <- as.integer(data$Oct)
+data$Nov <- as.integer(data$Nov)
+data$Dec <- as.integer(data$Dec)
+data[['J.D']] <- as.integer(data[['J.D']])
+data[['D.N']] <- as.integer(data[['D.N']])
+data[['DJF']] <- as.integer(data[['DJF']])
+data[['JJA']] <- as.integer(data[['JJA']])
+data[['SON']] <- as.integer(data[['SON']])
+
+# check the structure again
+str(data)
+
+```
+
+### Rename variables
+
+According to the data source, NASA's Goddard Institute for Space Studies, its [FAQs](http://data.giss.nasa.gov/gistemp/FAQ.html) explain what the shorthand variables mean.
+
+> When comparing seasonal temperatures, it is convenient to use "meteorological seasons" based on temperature and defined as groupings of whole months. Thus, Dec-Jan-Feb is the Northern Hemisphere meteorological winter, Mar-Apr-May is N.H. meteorological spring, Jun-Jul-Aug is N.H. meteorological summer and Sep-Oct-Nov is N.H. meteorological autumn. String these four seasons together and you have the meteorological year that begins on Dec. 1 and ends on Nov. 30.
+
+So, let's encode accordingly
+
+```{r rename}
+
+data <- rename(data, c('DJF'='Winter', 
+                       'MAM'='Spring', 
+                       'JJA'='Summer', 
+                       'SON'='Autumn',
+                       'J.D'='CalYear',
+                       'D.N'='MetYear'))
+
+str(data)
+
+```
+
+## Explore the data
+
+#### Deviations in Calendar Year
+
+```{r explore}
+
+ggplot(data, aes(x = Year, y = CalYear)) + geom_line()
+
+```
+
+#### Deviations in Meteorological Year
+
+```{r explore2}
+
+ggplot(data, aes(x = Year, y = MetYear)) + geom_line()
+
+```
+
+#### Deviations in Meteorological Year (Scatter Plot)
+
+```{r explore3}
+
+ggplot(data, aes(x = Year, y = MetYear)) + geom_point()
+
+```
+
+
+#### Deviations by Season
+
+```{r explore4}
+
+ggplot(data, aes(x = Year)) + 
+    geom_line(aes(y = Winter, colour = "Winter")) + 
+    geom_line(aes(y = Summer, colour = "Summer")) +
+    geom_line(aes(y = Autumn, colour = "Autumn")) +
+    geom_line(aes(y = Spring, colour = "Spring"))
+
+```
+
+#### Deviations by Season (Scatter)
+
+```{r explore5}
+
+ggplot(data, aes(x = Year)) + 
+    geom_point(aes(y = Winter, colour = "Winter")) + 
+    geom_point(aes(y = Summer, colour = "Summer")) +
+    geom_point(aes(y = Autumn, colour = "Autumn")) +
+    geom_point(aes(y = Spring, colour = "Spring"))
+
+```
+
+## Visualize the data
+
+Specify a year range and a "season" to display
+
+```{r visualize}
+
+visualize <- function(yearRange, season = "CalYear") {
+    
+   ggplot(data[data$Year %in% yearRange, ], aes(x = Year)) +
+       aes_string(y = season) + 
+       geom_line()
+}
+
+visualize(seq(1880, 2010, 5), "MetYear")
+
+```
