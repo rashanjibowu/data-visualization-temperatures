@@ -5,12 +5,15 @@ $(document).ready(function() {
 
 	// get some data
 	var data = getData();
+
+
+	// sort in descending year
 	var years = getYears(data);
 
 	// set dimension
 	var dimensions = {
 		outer: {
-			width: 100,
+			width: 1000,
 			height: 600
 		},
 		margins: {
@@ -18,18 +21,22 @@ $(document).ready(function() {
 			bottom: 10,
 			right: 10,
 			left: 10
-		}
+		},
+		section: {
+			width: 180,
+			margin: 30
+		},
+		timeline: {
+			width: 100
+		},
+		barHeight: 10,
+		verticalOffset: 30
 	};
 
 	dimensions.inner = {
 		width: dimensions.outer.width - dimensions.margins.left - dimensions.margins.right,
 		height: dimensions.outer.height - dimensions.margins.top - dimensions.margins.bottom
 	};
-
-	var middle = dimensions.outer.width / 2;
-
-	var barHeight = 10;
-	var verticalOffset = 30;
 
 	// set scales
 	var min = d3.min(data, function(element) {
@@ -42,20 +49,40 @@ $(document).ready(function() {
 
 	var xScale = d3.scale.linear()
 		.domain([min, max])
-		.range([dimensions.margins.left, dimensions.inner.width + dimensions.margins.left]);
+		.range([0, dimensions.section.width]);
 
-	// draw legend
+	var color = d3.scale.linear()
+		.domain([min, 0, max])
+		.range(["blue", "#DDDDDD", "red"]);
+
+	// draw the main svg
 	var svg = d3.select("#visualization")
-			.append("svg")
-			.attr({
+		.append("svg")
+		.attr({
 				width: dimensions.outer.width,
-				height: dimensions.outer.height,
-				class: function() {
-					return "mysvg yaxis";
-				}
+				height: dimensions.outer.height
 			});
 
-	svg.selectAll("text.yaxis")
+	// specify the canvas (drawable area)
+	var canvas = svg.append("g")
+		.attr({
+			class: "canvas",
+			width: dimensions.inner.width,
+			height: dimensions.inner.height,
+			transform: "translate(" + dimensions.margins.left + "," + dimensions.margins.top + ")"
+		});
+
+	// yaxis timeline
+	var timeline = canvas.append("g")
+		.attr({
+			width: dimensions.timeline.width,
+			height: dimensions.inner.height,
+			class: function() {
+				return "yaxis timeline";
+			}
+		});
+
+	timeline.selectAll("text.yaxis")
 		.data(years)
 		.enter()
 		.append("text")
@@ -65,9 +92,9 @@ $(document).ready(function() {
 			return;
 		})
 		.attr({
-			x: middle,
+			x: dimensions.timeline.width / 2,
 			y: function(d, i) {
-				return (i + 1) * barHeight + verticalOffset;
+				return (i + 1) * dimensions.barHeight + dimensions.verticalOffset;
 			},
 			class: "yaxis"
 		});
@@ -78,27 +105,33 @@ $(document).ready(function() {
 
 		season = season.toLowerCase();
 
-		var svg = d3.select("#visualization")
-			.append("svg")
+		var section = canvas
+			.append("g")
 			.attr({
-				width: dimensions.outer.width,
-				height: dimensions.outer.height,
-				class: function() {
-					return "mysvg " + season.toLowerCase();
+				width: dimensions.section.width,
+				height: dimensions.inner.height,
+				class: season.toLowerCase(),
+				transform: function() {
+					var xOffset = dimensions.timeline.width +
+						dimensions.section.margin +
+						(index * (dimensions.section.width + dimensions.section.margin));
+
+					var yOffset = 0;
+					return "translate(" + xOffset + "," + yOffset + ")";
 				}
 			});
 
 		// add season label
-		svg.append("text")
+		section.append("text")
 			.text(season.toUpperCase())
 			.attr({
-				x: middle,
+				x: dimensions.section.width / 2,
 				y: 13,
 				class: "season-label"
 			});
 
 		// add x-axis labels
-		svg.append("text")
+		section.append("text")
 			.text(min + "\xB0C")
 			.attr({
 				x: dimensions.margins.left,
@@ -106,32 +139,12 @@ $(document).ready(function() {
 				class: "xaxis min"
 			});
 
-		svg.append("text")
-			.text(max + "\xB0C")
+		section.append("text")
+			.text("+" + max + "\xB0C")
 			.attr({
-				x: dimensions.margins.left + dimensions.inner.width,
+				x: dimensions.section.width,
 				y: 25,
 				class: "xaxis max"
-			});
-
-		var line = d3.svg.line()
-			.x(function(d) {
-				return d.x;
-			})
-			.y(function(d) {
-				return d.y;
-			})
-			.interpolate("linear");
-
-		var lineData = [
-			{ x: 37, y: 22 },
-			{ x: 66, y: 22 }
-		];
-
-		svg.append("path")
-			.attr({
-				d: line(lineData),
-				class: "segment"
 			});
 
 		// add bar data
@@ -139,25 +152,29 @@ $(document).ready(function() {
 			return element.season.toLowerCase() == season;
 		});
 
-		svg.selectAll(".mysvg ." + season + " rect")
+		section.selectAll("rect." + season)
 			.data(relevantData)
 			.enter()
 			.append("rect")
 			.attr({
+				class: season,
 				width: function(d, i) {
 					// absolute value of deviation
-					return xScale(Math.abs(d.deviation)) - middle;
+					return xScale(Math.abs(d.deviation)) - dimensions.section.width / 2;
 				},
-				height: barHeight,
+				height: dimensions.barHeight,
 				y: function(d, i) {
-					return (i * barHeight) + verticalOffset;
+					return (i * dimensions.barHeight) + dimensions.verticalOffset;
 				},
 				x: function(d, i) {
 					// positive deviation start at middle
-					if (d.deviation >= 0) return middle;
+					if (d.deviation >= 0) return dimensions.section.width / 2;
 
 					// negative deviation, start at left
 					return xScale(d.deviation);
+				},
+				fill: function(d, i) {
+					return color(d.deviation);
 				}
 			});
 	});
