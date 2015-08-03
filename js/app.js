@@ -300,6 +300,29 @@ $(document).ready(function() {
 				fill: function(d, i) {
 					return color(d.deviation);
 				}
+			})
+			.on("mouseover", function(d, i) {
+				d3.select(this)
+					.style({
+						opacity: 0.7
+					})
+					.attr({
+						fill: function(d, i) {
+							if (d.deviation > 0) return color(max);
+
+							return color(min);
+						}
+					});
+
+			})
+			.on("mouseout", function(d, i) {
+				d3.select(this)
+					.style({
+						opacity: 0.4
+					})
+					.attr({
+						fill: color(d.deviation)
+					});
 			});
 	});
 });
