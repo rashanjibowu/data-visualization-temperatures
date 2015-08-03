@@ -14,7 +14,7 @@ $(document).ready(function() {
 	var dimensions = {
 		outer: {
 			width: 1000,
-			height: 600
+			height: 2200
 		},
 		margins: {
 			top: 10,
