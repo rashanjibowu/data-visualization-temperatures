@@ -123,7 +123,7 @@ $(document).ready(function() {
 					class: "separator",
 					d: sepGenerator(getLineSegment(element.from, element.to)),
 					style: function() {
-						return "stroke-dasharray:3,3"
+						return "stroke-dasharray:3,3";
 					}
 				});
 		});
