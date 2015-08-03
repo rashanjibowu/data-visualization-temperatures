@@ -187,6 +187,22 @@ $(document).ready(function() {
 			}
 		}
 
+		/* header underlines
+		var x = dimensions.timeline.width;
+		var y = 15;
+
+		for (var i = 0; i < 4; i++) {
+
+			x += dimensions.section.margin;
+			var next = {};
+			next.from = { x: x, y: y };
+
+			x += dimensions.section.width;
+			next.to = { x: x, y: y };
+
+			coords.push(next);
+		}*/
+
 		return coords;
 	}
 

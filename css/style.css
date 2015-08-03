@@ -12,11 +12,13 @@ text {
 text.yaxis {
 	text-anchor: middle;
 	font-size: 0.8em;
+	fill: gray;
 }
 
 text.season-label  {
 	text-anchor: middle;
 	font-size: 0.8em;
+	fill: gray;
 }
 
 text.xaxis {
