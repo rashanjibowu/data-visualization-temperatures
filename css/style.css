@@ -31,7 +31,7 @@ text.xaxis.max {
 	text-anchor: end;
 }
 
-path.segment {
-	stroke: purple;
+path.separator {
+	stroke: gray;
 	"stroke-width": 1;
 }

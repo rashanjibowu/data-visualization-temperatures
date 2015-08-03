@@ -99,6 +99,103 @@ $(document).ready(function() {
 			class: "yaxis"
 		});
 
+	var sepGenerator = d3.svg.line()
+		.x(function(d) {
+			return d.x;
+		})
+		.y(function(d) {
+			return d.y;
+		})
+		.interpolate("linear");
+
+	/**
+	 * Draws leader lines through out the visualization
+	 * @param  {array} years Array of years in the data
+	 * @return {void}
+	 */
+	function drawLines(years) {
+
+		var coords = getCoordinates(years);
+
+		coords.forEach(function(element, index, thisArray) {
+			canvas.append("path")
+				.attr({
+					class: "separator",
+					d: sepGenerator(getLineSegment(element.from, element.to)),
+					style: function() {
+						return "stroke-dasharray:3,3"
+					}
+				});
+		});
+	}
+
+	/**
+	 * Converts data (years) into coordinates for leader line generation
+	 * @param  {array} years Array of years
+	 * @return {array}       Coordinate objects
+	 */
+	function getCoordinates(years) {
+		var coords = [];
+
+		// each element must be an object that contains 2 objects (from, to)
+		// each object contains 2 properties (x, y)
+
+		// create 4 coords for every year that is multiple of 5
+		for (var i = 0; i < years.length; i++) {
+
+			// ignore irrelevant years
+			if (years[i] % 5 !== 0) continue;
+
+			// set starting values
+			var y = (i * dimensions.barHeight) + dimensions.verticalOffset + dimensions.barHeight / 2;
+
+			var portionOverlap = (3/4);
+			var x = dimensions.timeline.width * portionOverlap;
+
+			var first = {};
+			first.from = { x: x, y: y };
+
+			// increment x
+			x += dimensions.section.margin + dimensions.timeline.width * (1 - portionOverlap);
+			first.to = { x: x, y: y };
+
+			coords.push(first);
+
+			// inner loop for the 3 remaining line segments
+			for (var j = 0; j < 3; j++) {
+				var next = {};
+				// increment x
+				x += dimensions.section.width;
+				next.from = { x: x, y: y };
+
+				// increment x
+				x += dimensions.section.margin;
+				next.to = { x: x, y: y };
+
+				coords.push(next);
+			}
+		}
+
+		return coords;
+	}
+
+	/**
+	 * Converts 2 coordinate objects into an array of coordinates
+	 * @param  {object} from x/y coordinate
+	 * @param  {object} to   x/y coordinate
+	 * @return {array}      Array of coordinates
+	 */
+	function getLineSegment(from, to) {
+
+		var segment = [];
+		segment.push(from);
+		segment.push(to);
+		return segment;
+	}
+
+	// draw lines
+	drawLines(years);
+
 	// create the vertical lanes
 	var seasons = ["Winter", "Spring", "Summer", "Autumn"];
 	seasons.forEach(function(season, index, thisArray) {
