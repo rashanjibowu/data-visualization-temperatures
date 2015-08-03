@@ -269,3 +269,10 @@ visualize(seq(1880, 2010, 5), "MetYear")
 ```
 
 ![](analysis_files/figure-html/visualize-1.png) 
+
+## Write the data for browser based visualization
+
+
+```r
+write.csv(data, "./data/plotdata.csv")
+```
