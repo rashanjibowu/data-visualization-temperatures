@@ -13,6 +13,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="css/style.css" />
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -23,11 +24,15 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Visualization Stuff Below</p>
-        <div id="visualization"></div>
+        <div class="container">
+            <div class="row">
+            <h3>Historical Deviations from Normal Temperature By Meteorological Season</h3>
+            <p>The visualization below shows annual deviations from "normal" temperature, where "normal" temperature is defined as the average temperature from 1951 to 1980. The data explores the potential vertical timelines shown in reverse chronological order in order to see current relative temperatures first. Each year is plotted on the y-axis and temperature deviations are plotted on the x-axis, split by meteorological season.</p>
+            <p>As shown below, our planet is getting warmer (across all seasons) and has been doing so at a remarkable pace since 1980. The rate of change between 1880 and 1950, while still positive, is much slower than the current pace.</p>
 
-
-
-
+            <p>Check out the <a href="https://github.com/rashanjibowu/data-visualization-temperatures/blob/master/analysis.md">analysis</a> that helped inform this visualization.
+            </div>
+            <div id="visualization"></div>
+        </div>
     </body>
 </html>

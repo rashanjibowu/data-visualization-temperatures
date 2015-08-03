@@ -4,7 +4,9 @@ Rashan Jibowu
 
 ## Introduction
 
-x
+Below, I analyze global historical temperatue from NASA's Goddard Institute for Space Studies. This analysis informed an [interactive data visualization](https://rashanjibowu/github.com/data-visualization-temperatures) that explores annual deviations from "normal" temperature. 
+
+Note that "normal" temperature is above global temperature from 1951-1980.
 
 ## Set Up Environment
 
@@ -269,3 +271,10 @@ visualize(seq(1880, 2010, 5), "MetYear")
 ```
 
 ![](analysis_files/figure-html/visualize-1.png) 
+
+## Write the data for browser based visualization
+
+
+```r
+write.csv(data, "./data/plotdata.csv")
+```

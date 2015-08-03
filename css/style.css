@@ -1,12 +1,47 @@
+body {
+	font-family: "Helvetica", sans-serif;
+}
 
-.mysvg{
+.mysvg {
 	border: 1px solid red;
 	float: left;
 	margin-right: 20px;
 }
 
-.mysvg.yaxis text {
-	font-size: 10px;
+rect {
+	opacity: 0.7;
+}
+
+text {
 	font-family: sans-serif;
+}
+
+text.yaxis {
 	text-anchor: middle;
+	font-size: 0.8em;
+	fill: gray;
+}
+
+text.season-label  {
+	text-anchor: middle;
+	font-size: 0.8em;
+	fill: gray;
+}
+
+text.xaxis {
+	font-size: 0.6em;
+	fill: gray;
+}
+
+text.xaxis.min {
+	text-anchor: start;
+}
+
+text.xaxis.max {
+	text-anchor: end;
+}
+
+path.separator {
+	stroke: gray;
+	"stroke-width": 1;
 }
