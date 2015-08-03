@@ -294,7 +294,7 @@ function getData() {
 
 		season = season.toLowerCase();
 
-		for (var i = 0; i < 100; i++) {
+		for (var i = 0; i < 216; i++) {
 			data.push({
 				year: 1800 + i,
 				deviation: Math.round((Math.random() * (MAX - MIN)) + MIN),
@@ -303,7 +303,7 @@ function getData() {
 		}
 	});
 
-	return data;
+	return data.sort(sortDescending);
 }
 
 function getYears(data) {
@@ -328,4 +328,14 @@ function getYears(data) {
 	});
 
 	return years;
+}
+
+/**
+ * Sorting method for the data
+ * @param  {object} a first element
+ * @param  {object} b second element
+ * @return {int}   Indicator of which should come before the other
+ */
+function sortDescending(a, b) {
+	return b.year - a.year;
 }

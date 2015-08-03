@@ -21,6 +21,7 @@ text.season-label  {
 
 text.xaxis {
 	font-size: 0.6em;
+	fill: gray;
 }
 
 text.xaxis.min {
