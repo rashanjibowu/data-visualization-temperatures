@@ -257,7 +257,7 @@ $(document).ready(function() {
 				class: season,
 				width: function(d, i) {
 					// absolute value of deviation
-					return xScale(Math.abs(d.deviation)) - dimensions.section.width / 2;
+					return xScale(Math.abs(d.deviation)) - xScale(0);
 				},
 				height: dimensions.barHeight,
 				y: function(d, i) {
@@ -265,7 +265,7 @@ $(document).ready(function() {
 				},
 				x: function(d, i) {
 					// positive deviation start at middle
-					if (d.deviation >= 0) return dimensions.section.width / 2;
+					if (d.deviation >= 0) return xScale(0);
 
 					// negative deviation, start at left
 					return xScale(d.deviation);
@@ -285,7 +285,7 @@ function getData() {
 
 	var data = [];
 
-	var MAX = 20;
+	var MAX = 40;
 	var MIN = -20;
 
 	var seasons = ["Winter", "Spring", "Summer", "Autumn"];
