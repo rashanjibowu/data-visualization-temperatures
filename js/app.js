@@ -13,7 +13,7 @@ $(document).ready(function() {
 	// set dimension
 	var dimensions = {
 		outer: {
-			width: 1000,
+			width: 1200,
 			height: 2200
 		},
 		margins: {
@@ -73,31 +73,42 @@ $(document).ready(function() {
 		});
 
 	// yaxis timeline
-	var timeline = canvas.append("g")
-		.attr({
-			width: dimensions.timeline.width,
-			height: dimensions.inner.height,
-			class: function() {
-				return "yaxis timeline";
-			}
-		});
+	var numTimelines = 2;	// for left and right side
+	for (var i = 0; i < numTimelines; i++) {
 
-	timeline.selectAll("text.yaxis")
-		.data(years)
-		.enter()
-		.append("text")
-		.text(function(d, i) {
-			// show every five years
-			if (d % 5 === 0) return d;
-			return;
-		})
-		.attr({
-			x: dimensions.timeline.width / 2,
-			y: function(d, i) {
-				return (i + 1) * dimensions.barHeight + dimensions.verticalOffset;
-			},
-			class: "yaxis"
-		});
+		var groupX = 0;
+
+		if (i == 1) {
+			groupX = dimensions.timeline.width + (dimensions.section.margin + dimensions.section.width) * 4;
+		}
+
+		var timeline = canvas.append("g")
+			.attr({
+				width: dimensions.timeline.width,
+				height: dimensions.inner.height,
+				transform: "translate(" + groupX + "," + 0 + ")",
+				class: function() {
+					return "yaxis timeline";
+				}
+			});
+
+		timeline.selectAll("text.yaxis")
+			.data(years)
+			.enter()
+			.append("text")
+			.text(function(d, i) {
+				// show every five years
+				if (d % 5 === 0) return d;
+				return;
+			})
+			.attr({
+				x: dimensions.timeline.width / 2,
+				y: function(d, i) {
+					return (i + 1) * dimensions.barHeight + dimensions.verticalOffset;
+				},
+				class: "yaxis"
+			});
+	}
 
 	var sepGenerator = d3.svg.line()
 		.x(function(d) {
