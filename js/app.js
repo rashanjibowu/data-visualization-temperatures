@@ -140,7 +140,7 @@ $(document).ready(function() {
 		// each element must be an object that contains 2 objects (from, to)
 		// each object contains 2 properties (x, y)
 
-		// create 4 coords for every year that is multiple of 5
+		// create 5 coords for every year that is multiple of 5
 		for (var i = 0; i < years.length; i++) {
 
 			// ignore irrelevant years
@@ -161,8 +161,8 @@ $(document).ready(function() {
 
 			coords.push(first);
 
-			// inner loop for the 3 remaining line segments
-			for (var j = 0; j < 3; j++) {
+			// inner loop for the 4 remaining line segments
+			for (var j = 0; j < 4; j++) {
 				var next = {};
 				// increment x
 				x += dimensions.section.width;
